@@ -241,7 +241,7 @@ def main():
                 objeto_inventario.mostrar_por_proveedor(codigo)
             case '8':
                 objeto_inventario.guardar()
-            case '_':
+            case _:
                 print("Introduce una opcion del menu")
 
 if __name__ == "__main__":
