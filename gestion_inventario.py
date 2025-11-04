@@ -61,8 +61,6 @@ class Inventario:
 
         except FileNotFoundError:
             print("No se encontró el archivo de tareas. Comenzando con una lista vacía.")
-        # TODO: implementar la lectura del fichero JSON y la creación de objetos
-        pass
 
     def guardar(self):
         # """
@@ -70,7 +68,8 @@ class Inventario:
         # Convierte los objetos Producto y Proveedor en diccionarios.
         # """
         # recorrer self.productos y guardar los datos en formato JSON
-        pass
+        with open(self.nombre_fichero, 'w') as f:
+            json.dump(self.productos, f)
                 
 
 
@@ -132,6 +131,7 @@ class Inventario:
         
         if producto_buscado:
             self.productos.remove(producto_buscado)
+            print("Producto Eliminado")
 
         print("Producto no encontrado")
         
@@ -141,7 +141,9 @@ class Inventario:
         # Calcula y devuelve el valor total del inventario (precio * stock).
         # """
         # devolver la suma total del valor del stock
-        pass
+        for p in self.productos:
+            total = p.precio * p.stock
+            return total
 
     def mostrar_por_proveedor(self, nombre_proveedor):
         # """
@@ -149,7 +151,9 @@ class Inventario:
         # Si no existen productos de ese proveedor, mostrar un mensaje.
         # """
         # filtrar y mostrar los productos de un proveedor concreto
-        pass
+        for p in self.productos:
+            if (p.proveedor.codigo.lower() == nombre_proveedor.lower()):
+                print(p.__str__())
 
 
 # ======================================================
@@ -175,11 +179,70 @@ def main():
 
         match opcion:
             case '1':
-                pass
+                codigo = input("Codigo Proveedor: ")
+                nombre = input("Nombre Proveedor: ")
+                contacto = input("Contacto")
+
+                codigo_producto = input("Codigo Producto:")
+                nombre_producto = input("Nombre Producto:")
+                try:
+                    precio = float(input("Precio Producto:"))
+                    stock = int(input("Stock Producto:"))
+                except Exception as e:
+                    print(f"Error: {e}")
+                if objeto_inventario.buscar(codigo_producto):
+                    print("Producto ya existente")
+                else:
+                    proveedor = Proveedor(codigo, nombre, contacto)
+                    producto = Producto(codigo_producto, nombre_producto, precio, stock, proveedor)
+                    objeto_inventario.anadir_producto(producto)
 
             case '2':
                 objeto_inventario.mostrar()
+            case '3':
+                codigo = input("Codigo de Producto a buscar: ")
 
+                producto = objeto_inventario.buscar(codigo)
+
+                if (producto):
+                    print("Producto existe")
+                else:
+                    print("Producto no existe")
+
+                if producto:
+                    print(f"Producto encontrado: {producto.__str__()}")
+            case '4':
+                codigo = input("Codigo de Producto a buscar: ")
+                
+                nombre = input("Nombre del Producto: ")
+                try:
+                    precio = float(input("Precio Producto:"))
+                    stock = int(input("Stock Producto:"))
+                except Exception as e:
+                    print(f"Error: {e}")
+
+                if nombre=="":
+                    nombre = None
+                
+                objeto_inventario.modificar(codigo, nombre, precio, stock)
+
+            case '5':
+                codigo = input("Codigo de Producto: ")
+                if objeto_inventario.buscar(codigo):
+                    objeto_inventario.eliminar(codigo)
+                else:
+                    print("No existe ese producto")
+            case '6':
+                pass
+
+            case '7':
+                codigo ("Codigo del proveedor: ")
+
+                objeto_inventario.mostrar_por_proveedor(codigo)
+            case '8':
+                objeto_inventario.guardar()
+            case '_':
+                print("Introduce una opcion del menu")
 
 if __name__ == "__main__":
     main()
