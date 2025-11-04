@@ -13,7 +13,7 @@ class Proveedor:
         self.contacto = contacto
 
     def __str__(self):
-        return f"Nombre: {self.nombre}, Contacto: {self.contacto}"
+        return f"Proveedor: {self.nombre} ({self.contacto})"
 
 
 # ======================================================
@@ -30,7 +30,7 @@ class Producto:
 
     def __str__(self):
         # Ejemplo: "[P001] Teclado - 45.99 € (10 uds.) | Proveedor: TechZone (ventas@techzone.com)"
-        return f"[{self.codigo}] {self.nombre} - {self.precio}€ ({self.stock} uds.) | Proveedor: {self.proveedor.nombre} ({self.proveedor.contacto})"
+        return f"[{self.codigo}] {self.nombre} - {self.precio}€ ({self.stock} uds.) | {self.proveedor.__str__()}"
 
 
 # ======================================================
@@ -49,11 +49,12 @@ class Inventario:
                 self.productos = []
                 
                 for d in inventario_cargado:
+                    proveedor = Proveedor(d["proveedor"]["codigo"], d["proveedor"]["nombre"], d["proveedor"]["contacto"])
                     producto = Producto(d["codigo"], 
                                         d["nombre"],
                                         d["precio"],
                                         d["stock"],
-                                        d["proveedor"])
+                                        proveedor)
                     self.productos.append(producto)
 
                 print("Productos guardados correctamente")
@@ -70,41 +71,70 @@ class Inventario:
         # """
         # recorrer self.productos y guardar los datos en formato JSON
         pass
+                
+
 
     def anadir_producto(self, producto):
         # """
         # Añade un nuevo producto al inventario si el código no está repetido.
         # """
         # comprobar si el código ya existe y, si no, añadirlo
-        pass
+        if producto.codifo not in self.productos.codigo:
+            self.productos.append(producto)
+            print("El producto se añadio sin problema")
+
+        print("El producto introducido ya esta registrado")
 
     def mostrar(self):
         # """
         # Muestra todos los productos del inventario.
         # """
         # mostrar todos los productos almacenados
-        pass
+        for proveedor in self.productos.proveedor:
+            print(proveedor.__str__())
 
     def buscar(self, codigo):
         # """
         # Devuelve el producto con el código indicado, o None si no existe.
         # """
         # buscar un producto por código
-        pass
+        producto_buscado = [producto for producto in self.productos if codigo.lower()==self.productos.codigo.lower()]
+        
+        if producto_buscado:
+            return producto_buscado
+        return None
 
     def modificar(self, codigo, nombre=None, precio=None, stock=None):
         # """
         # Permite modificar los datos de un producto existente.
         # """
         # buscar el producto y actualizar sus atributos
-        pass
+        producto_buscado = [producto for producto in self.productos if codigo.lower()==self.productos.codigo.lower()]
+        
+        if producto_buscado:
+            if nombre:
+                self.productos.nombre = nombre
+            elif precio:
+                self.productos.precio = precio
+            elif stock:
+                self.productos.stock = stock
+            else:
+                print("Los datos son iguales a los anteriores")
+            
+        print("No hay producto con ese codigo")
 
     def eliminar(self, codigo):
         # """
         # Elimina un producto del inventario según su código.
         # """
         # eliminar el producto de la lista
-        pass
+        producto_buscado = [producto for producto in self.productos if codigo.lower()==self.productos.codigo.lower()]
+        
+        if producto_buscado:
+            self.productos.remove(producto_buscado)
+
+        print("Producto no encontrado")
+        
 
     def valor_total(self):
         # """
@@ -143,7 +173,12 @@ def main():
 
         opcion = input("Seleccione una opción: ")
 
-    # implementar las acciones correspondientes a cada opción del menú
+        match opcion:
+            case '1':
+                pass
+
+            case '2':
+                objeto_inventario.mostrar()
 
 
 if __name__ == "__main__":
